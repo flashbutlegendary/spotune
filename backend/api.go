@@ -261,33 +261,67 @@ func handleMetadata(w http.ResponseWriter, r *http.Request) {
 	// Format metadata into format frontend expects
 	var result interface{}
 	if strings.Contains(req.URL, "/track/") {
-		details := data.(map[string]interface{})
-		artistsSlice := []string{}
-		if rawArtists, ok := details["artists"].(string); ok {
-			artistsSlice = strings.Split(rawArtists, ", ")
-		}
-		
-		result = map[string]interface{}{
-			"type": "track",
-			"data": map[string]interface{}{
-				"title":       getString(details, "name"),
-				"artists":     artistsSlice,
-				"cover_url":   getString(details, "cover_url"),
-				"duration_ms": details["duration_ms"],
-				"album":       getString(details, "album_name"),
-			},
+		if details, ok := data.(TrackResponse); ok {
+			artistsSlice := []string{}
+			if details.Track.Artists != "" {
+				artistsSlice = strings.Split(details.Track.Artists, ", ")
+			}
+			result = map[string]interface{}{
+				"type": "track",
+				"data": map[string]interface{}{
+					"title":       details.Track.Name,
+					"artists":     artistsSlice,
+					"cover_url":   details.Track.Images,
+					"duration_ms": details.Track.DurationMS,
+					"album":       details.Track.AlbumName,
+				},
+			}
+		} else if detailsMap, ok := data.(map[string]interface{}); ok {
+			artistsSlice := []string{}
+			if rawArtists, ok := detailsMap["artists"].(string); ok {
+				artistsSlice = strings.Split(rawArtists, ", ")
+			}
+			result = map[string]interface{}{
+				"type": "track",
+				"data": map[string]interface{}{
+					"title":       getString(detailsMap, "name"),
+					"artists":     artistsSlice,
+					"cover_url":   getString(detailsMap, "cover_url"),
+					"duration_ms": detailsMap["duration_ms"],
+					"album":       getString(detailsMap, "album_name"),
+				},
+			}
+		} else {
+			writeJSONError(w, http.StatusInternalServerError, fmt.Sprintf("Unexpected track data type: %T", data))
+			return
 		}
 	} else {
 		// Playlist or album
-		playlistDetails := data.(*PlaylistResponsePayload)
-		result = map[string]interface{}{
-			"type": "playlist",
-			"data": map[string]interface{}{
-				"name":         playlistDetails.PlaylistInfo.Owner.Name,
-				"owner":        playlistDetails.PlaylistInfo.Owner.DisplayName,
-				"cover_url":    playlistDetails.PlaylistInfo.Cover,
-				"total_tracks": playlistDetails.PlaylistInfo.Tracks.Total,
-			},
+		if playlistDetails, ok := data.(*PlaylistResponsePayload); ok {
+			result = map[string]interface{}{
+				"type": "playlist",
+				"data": map[string]interface{}{
+					"name":         playlistDetails.PlaylistInfo.Owner.Name,
+					"owner":        playlistDetails.PlaylistInfo.Owner.DisplayName,
+					"cover_url":    playlistDetails.PlaylistInfo.Cover,
+					"total_tracks": playlistDetails.PlaylistInfo.Tracks.Total,
+					"tracks":       playlistDetails.TrackList,
+				},
+			}
+		} else if albumDetails, ok := data.(*AlbumResponsePayload); ok {
+			result = map[string]interface{}{
+				"type": "playlist",
+				"data": map[string]interface{}{
+					"name":         albumDetails.AlbumInfo.Name,
+					"owner":        albumDetails.AlbumInfo.Artists,
+					"cover_url":    albumDetails.AlbumInfo.Images,
+					"total_tracks": albumDetails.AlbumInfo.TotalTracks,
+					"tracks":       albumDetails.TrackList,
+				},
+			}
+		} else {
+			writeJSONError(w, http.StatusInternalServerError, fmt.Sprintf("Unexpected playlist/album data type: %T", data))
+			return
 		}
 	}
 

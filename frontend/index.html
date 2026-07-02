@@ -3,344 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotune</title>
-    <meta name="description" content="Download Spotify tracks and playlists with full metadata and high-resolution artwork in premium quality.">
-    <!-- Google Font Outfit -->
+    <title>Spotune - Premium Music Downloader</title>
+    <!-- Google Fonts Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Favicon link (Tab Thumbnail) -->
-    <link rel="icon" type="image/png" href="logo.png">
-    <!-- Styles Link -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Background glowing spots -->
+    <!-- Background glowing orbs -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
 
     <div class="wrapper">
-        <!-- Sticky Premium Navigation Bar -->
+        <!-- Premium Navigation -->
         <nav class="navbar">
             <div class="logo">
-                <img src="logo.png" class="logo-img" alt="Spotune Logo">
                 <span class="logo-text">Spotune</span>
             </div>
 
-            <!-- Hamburger Icon for Mobile -->
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
-                <span class="hamburger"></span>
-            </button>
+            <!-- Navbar settings and controls -->
+            <div class="nav-controls">
+                <!-- API Host Switcher -->
+                <div class="control-item">
+                    <span>Host:</span>
+                    <select id="apiHostSelect" class="glass-select">
+                        <option value="render" selected>Render API</option>
+                        <option value="local">Local API</option>
+                    </select>
+                </div>
 
-            <!-- Navigation Links -->
-            <div class="nav-menu" id="navMenu">
-                <a href="#hero" class="nav-link">Home</a>
-                <a href="#download" class="nav-link">Download</a>
-                <a href="#support" class="nav-link nav-link-support">Support</a>
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#feedback" class="nav-link">Feedback</a>
-            </div>
+                <!-- Icon API Switcher -->
+                <div class="control-item">
+                    <span id="iconToggleLabel">Fetch Icons:</span>
+                    <label class="switch-label">
+                        <input type="checkbox" id="iconFetchToggle" class="switch-input" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
 
-            <!-- API Status Badge -->
-            <div class="api-config-wrapper">
-                <div id="apiHealthBadge" class="health-badge status-checking">
+                <!-- Status Badge -->
+                <div id="healthBadge" class="health-badge status-checking">
                     <span class="status-indicator"></span>
-                    <span id="healthLabel">🟢 API Online</span>
+                    <span id="healthLabel">Checking API...</span>
                 </div>
             </div>
         </nav>
-        <!-- Main Content Area -->
-        <main class="main-container">
-            
-            <!-- 1. Hero Section -->
-            <section id="hero" class="hero-section">
-                <h1 id="heroTitle">Convert Spotify Links to <span class="gradient-text">High-Quality Audio</span></h1>
-                <p id="heroSubtitle" class="hero-subtitle">Paste any track or playlist link. Spotune automatically finds the best match, embeds full metadata tags, and downloads your audio cleanly.</p>
-            </section>
 
-            <!-- 2. Download Section (Primary Workflow) -->
-            <section id="download" class="download-section scroll-margin">
-                <div class="glass-card main-download-card">
-                    <div class="search-box">
-                        <input type="text" id="urlInput" placeholder="Paste Spotify track or playlist URL..." autocomplete="off" aria-label="Spotify Link Input">
-                        <button id="btnSearch" class="btn btn-primary">
-                            <span>Retrieve Metadata</span>
-                        </button>
+        <main class="main-container">
+            <!-- Hero -->
+            <header class="hero-section">
+                <h1>Convert Spotify Links to <span class="gradient-text">Studio Sound</span></h1>
+                <p class="hero-subtitle">Retrieve metadata instantly, toggle artwork resolution options, and download tracks or entire playlists effortlessly.</p>
+            </header>
+
+            <!-- Main Interactive Card -->
+            <section class="glass-card">
+                <!-- Input Box -->
+                <div class="search-box">
+                    <input type="text" id="urlInput" class="styled-input" placeholder="Paste Spotify track or playlist link..." autocomplete="off">
+                    <button id="btnFetch" class="btn btn-primary">
+                        <span>Fetch Metadata</span>
+                    </button>
+                </div>
+
+                <!-- Initial Empty State -->
+                <div id="emptyState" class="empty-state">
+                    <span class="empty-state-icon">🎵</span>
+                    <p>Paste a Spotify track or playlist URL to retrieve full details.</p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="empty-state" style="display: none;">
+                    <div class="loader-spinner"></div>
+                    <p id="loadingMsg">Querying metadata client...</p>
+                </div>
+
+                <!-- Metadata Content Layout -->
+                <div id="metadataLayout" class="metadata-layout" style="display: none;">
+                    <!-- Art / Cover Panel -->
+                    <div class="art-panel">
+                        <div id="artContainer" class="album-art">
+                            <!-- JS will inject image or fallback SVG here -->
+                        </div>
                     </div>
 
-                    <!-- Config Settings & Preview Grid -->
-                    <div id="configSection" class="config-grid" style="display: none;">
-                        
-                        <!-- Metadata Preview Card -->
-                        <div class="sub-glass-card meta-card">
-                            <div class="card-header">
-                                <h3>Metadata Preview</h3>
-                            </div>
-                            <div id="metaContent" class="meta-content">
-                                <img id="trackArt" class="album-artwork" src="logo.png" alt="Album Art">
-                                <div class="meta-details">
-                                    <h4 id="trackTitle">Song Title</h4>
-                                    <p id="trackArtist">Artist Name</p>
-                                    <div class="extra-tags">
-                                        <span id="tagType" class="meta-tag">Track</span>
-                                        <span id="tagDuration" class="meta-tag">0:00</span>
-                                        <span id="tagExtra" class="meta-tag">FLAC</span>
-                                    </div>
-                                    <!-- Lookup Timer Details -->
-                                    <div id="lookupTimer" class="lookup-timer-badge"></div>
-                                </div>
-                            </div>
+                    <!-- Details and Options Panel -->
+                    <div class="details-panel">
+                        <span id="itemTypeBadge" class="item-badge">Track</span>
+                        <h2 id="itemTitle" class="item-title">Title Loading...</h2>
+                        <h3 id="itemArtist" class="item-artist">Artist Loading...</h3>
+
+                        <!-- Playlist Scroll Container (hidden for single tracks) -->
+                        <div id="playlistTracksBox" class="playlist-tracks-container" style="display: none;">
+                            <!-- JS will inject playlist tracks here -->
                         </div>
 
-                        <!-- Settings Config Card -->
-                        <div class="sub-glass-card settings-card">
-                            <div class="card-header">
-                                <h3>Download Configuration</h3>
-                            </div>
-                            
+                        <!-- Download Options Form -->
+                        <div class="download-config">
                             <div class="form-group">
-                                <label for="formatSelect">Output Audio Format</label>
-                                <select id="formatSelect" class="styled-select">
-                                    <option value="mp3">MP3 (Universal compatibility)</option>
-                                    <option value="flac" selected>FLAC (Lossless Studio Quality)</option>
-                                    <option value="wav">WAV (Raw Audio)</option>
-                                    <option value="aac">AAC / M4A (Apple Music format)</option>
-                                    <option value="ogg">OGG Vorbis (Spotify native format)</option>
-                                    <option value="opus">Opus (Optimized compression)</option>
+                                <label for="formatSelect">Format</label>
+                                <select id="formatSelect" class="glass-select">
+                                    <option value="flac" selected>FLAC (Lossless)</option>
+                                    <option value="mp3">MP3 (320kbps)</option>
+                                    <option value="wav">WAV (Raw)</option>
+                                    <option value="aac">AAC (Apple)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="qualitySelect">Bitrate</label>
+                                <select id="qualitySelect" class="glass-select" disabled>
+                                    <option value="320">320 kbps</option>
+                                    <option value="256">256 kbps</option>
+                                    <option value="192">192 kbps</option>
                                 </select>
                             </div>
 
-                            <div class="form-group" id="qualityWrapper" style="display: none;">
-                                <label for="qualitySelect">Audio Quality Bitrate</label>
-                                <select id="qualitySelect" class="styled-select">
-                                    <option value="320">320 kbps (Superb quality)</option>
-                                    <option value="256">256 kbps (Excellent)</option>
-                                    <option value="192">192 kbps (Standard)</option>
-                                    <option value="128">128 kbps (Space saver)</option>
-                                </select>
-                            </div>
-
-                            <button id="btnQueue" class="btn btn-action ready">
+                            <button id="btnDownload" class="btn btn-primary btn-download-action">
                                 <span>Start Processing Download</span>
                             </button>
                         </div>
-
                     </div>
+                </div>
 
-                    <!-- Interactive Empty State Placeholder -->
-                    <div id="metaEmptyState" class="empty-state">
-                        <img src="logo.png" class="empty-state-logo" alt="Spotune Placeholder">
-                        <p>No track or playlist loaded. Paste a URL above to fetch details.</p>
+                <!-- Polling / Download Progress State -->
+                <div id="progressState" class="progress-container" style="display: none;">
+                    <div class="progress-header">
+                        <span id="progressTitle" class="progress-title">Processing Download</span>
+                        <span id="progressPercent" class="progress-percent">0%</span>
                     </div>
-
-                    <!-- Loader Frame -->
-                    <div id="loadingFrame" class="loading-frame" style="display: none;">
-                        <div class="loader-spinner"></div>
-                        <p id="loadingMessage">Resolving Spotify tracks...</p>
+                    <div class="progress-bar-bg">
+                        <div id="progressBarFill" class="progress-bar-fill"></div>
                     </div>
-
-                    <!-- Progress Frame -->
-                    <div id="progressFrame" class="progress-frame" style="display: none;">
-                        <div class="progress-header">
-                            <h4 id="progressTitle">Downloading Audio Source</h4>
-                            <span id="progressPercent">0%</span>
-                        </div>
-                        <div class="bar-track">
-                            <div id="progressBarFill" class="bar-fill"></div>
-                        </div>
-                        <div class="progress-footer">
-                            <span id="progressStage">Extracting streams...</span>
-                            <div class="progress-actions">
-                                <button id="btnPauseResume" class="btn-micro">⏸ Pause</button>
-                                <button id="btnCancelDownload" class="btn-micro btn-micro-danger">🛑 Cancel</button>
-                            </div>
+                    <div class="progress-footer">
+                        <span id="progressStatus" class="progress-status">Initializing task...</span>
+                        <div class="progress-controls">
+                            <button id="btnPauseResume" class="btn-mini">⏸ Pause</button>
+                            <button id="btnCancel" class="btn-mini btn-mini-danger">🛑 Cancel</button>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Success Frame -->
-                    <div id="successFrame" class="success-frame" style="display: none;">
-                        <div class="success-header">
-                            <div class="success-checkmark">✓</div>
-                            <h3>Download Complete!</h3>
-                        </div>
-                        <div class="success-details">
-                            <div class="detail-row"><span>Output Format:</span><strong id="successFormat">FLAC</strong></div>
-                            <div class="detail-row"><span>Quality:</span><strong id="successQuality">Lossless</strong></div>
-                            <div class="detail-row"><span>File Size:</span><strong id="successSize">0.0 MB</strong></div>
-                        </div>
-                        <a id="btnDownloadFile" href="#" target="_blank" class="btn btn-primary btn-save">
-                            <span>📥 Save Downloaded File</span>
+                <!-- Success Screen -->
+                <div id="successState" class="success-container" style="display: none;">
+                    <div class="success-icon">✓</div>
+                    <h2>Download Prepared!</h2>
+                    <p>Your audio file/archive is processed and ready to be stored locally.</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem; width: 100%; justify-content: center;">
+                        <a id="downloadLink" href="#" target="_blank" class="btn btn-primary" style="height: 52px; padding: 0 2rem;">
+                            <span>📥 Save Audio File</span>
                         </a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. Support Section -->
-            <section id="support" class="support-section scroll-margin">
-                <div class="glass-card support-grid">
-                    <div class="support-content">
-                        <h2>Support the Project</h2>
-                        <p>Spotune is a free, open-source downloader built for the community. We do not run ads or sell user data. To keep this platform alive, we rely entirely on your contributions to cover active infrastructure expenses:</p>
-                        <ul class="support-list">
-                            <li><strong>Hosting & Servers</strong>: Maintaining ultra-fast node servers worldwide.</li>
-                            <li><strong>High-Speed Bandwidth</strong>: Transferring gigabytes of lossless files daily.</li>
-                            <li><strong>Active Maintenance</strong>: Constantly updating providers when Spotify API wrappers change.</li>
-                        </ul>
-                    </div>
-                    <div class="support-action-box">
-                        <div class="ko-fi-card">
-                            <span class="ko-fi-heart">❤️</span>
-                            <h4>Help Keep Spotune Free</h4>
-                            <a href="https://ko-fi.com/flashbutlegendary" target="_blank" class="btn btn-support">
-                                <span>☕ Support the Creator</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. Features Section -->
-            <section id="features" class="features-section scroll-margin">
-                <div class="features-header">
-                    <h2>Real Technical Features</h2>
-                    <p>Designed as a commercial-grade SaaS downloader, packing features you actually care about.</p>
-                </div>
-                
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <span class="feature-icon">📁</span>
-                        <h4>Recursive Playlist Resolution</h4>
-                        <p>Feed a 100-song playlist. Spotune resolves, tracks progress, and downloads everything concurrently.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🛡️</span>
-                        <h4>Clean Fallback Engine</h4>
-                        <p>No hardcoded API credentials limit us. If the Spotify API breaks, our headless scraping engine takes over.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🎛️</span>
-                        <h4>Metadata Tag Injector</h4>
-                        <p>We write full ID3 and Vorbis tags including album art, genre, year, label, and composers using mutagen.</p>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">📦</span>
-                        <h4>Smart Playlist ZIP</h4>
-                        <p>Cancel a playlist mid-way? Choose to immediately compress and download only the completed tracks.</p>
-                    </div>
-                </div>
-
-                <!-- Quick Tips Card inside Features -->
-                <div class="glass-card tips-card">
-                    <div class="tips-header">
-                        <span class="tips-badge">💡 Quick Tip</span>
-                    </div>
-                    <p id="tipsText" class="tips-content">Bookmark Spotune with Ctrl + D so it's one click away next time.</p>
-                </div>
-            </section>
-
-            <!-- 5. Feedback Section -->
-            <section id="feedback" class="feedback-section scroll-margin">
-                <div class="glass-card feedback-card">
-                    <div class="feedback-header">
-                        <h2>Share Your Feedback</h2>
-                        <p>Ran into an issue or have a feature suggestion? Let us know directly.</p>
-                    </div>
-
-                    <form id="feedbackForm" action="https://formspree.io/f/xbdvgjey" method="POST" class="feedback-form">
-                        <div class="form-group">
-                            <label for="feedbackCategory">Feedback Category</label>
-                            <select id="feedbackCategory" name="category" class="styled-select" required>
-                                <option value="General Feedback">General Feedback</option>
-                                <option value="Bug Report">Bug Report</option>
-                                <option value="Download Failed">Download Failed</option>
-                                <option value="Playlist Download Issue">Playlist Download Issue</option>
-                                <option value="Metadata Incorrect">Metadata Incorrect</option>
-                                <option value="Wrong Song Downloaded">Wrong Song Downloaded</option>
-                                <option value="Website Performance">Website Performance</option>
-                                <option value="Feature Request">Feature Request</option>
-                                <option value="UI / UX Suggestion">UI / UX Suggestion</option>
-                                <option value="Support / Donation">Support / Donation</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="feedbackEmail">Your Email (Optional)</label>
-                            <input type="email" id="feedbackEmail" name="email" class="styled-input" placeholder="you@example.com" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="feedbackMessage">Your Message</label>
-                            <textarea id="feedbackMessage" name="message" class="styled-textarea" placeholder="Describe your experience or suggestion..." required></textarea>
-                        </div>
-
-                        <button type="submit" id="btnSubmitFeedback" class="btn btn-primary">
-                            <span>Submit Feedback</span>
+                        <button id="btnReset" class="btn btn-secondary" style="height: 52px;">
+                            <span>Convert Another</span>
                         </button>
-                    </form>
-                    <div id="feedbackResponse" class="feedback-response-msg"></div>
+                    </div>
                 </div>
             </section>
-
         </main>
 
-        <!-- 6. Footer -->
         <footer class="footer">
-            <p>&copy; 2026 Spotune. Built for premium offline listening. Spotune is not affiliated with Spotify.</p>
+            <p>&copy; 2026 Spotune Downloader. Fast, clean metadata tagging engine.</p>
         </footer>
-    </div>
-
-    <!-- Playlist smart cancellation modal -->
-    <div id="cancelModal" class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3>Cancel Playlist Download</h3>
-                <button class="close-modal" id="btnCloseModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Choose an action to apply to the active playlist download operation:</p>
-                <div class="cancel-options-list">
-                    <button class="cancel-option-btn" data-option="continue">
-                        <strong>Continue Download</strong>
-                        <span>Ignore cancellation request and keep downloading remaining files.</span>
-                    </button>
-                    <button class="cancel-option-btn" data-option="cancel_all">
-                        <strong>Cancel & Delete Everything</strong>
-                        <span>Stop immediately and delete all completed or partial tracks from the workspace.</span>
-                    </button>
-                    <button class="cancel-option-btn" data-option="cancel_zip_completed">
-                        <strong>Cancel & ZIP Completed Files</strong>
-                        <span>Stop immediately, pack completed tracks into a ZIP file, and download.</span>
-                    </button>
-                    <button class="cancel-option-btn" data-option="cancel_keep_completed">
-                        <strong>Cancel & Keep Completed Files</strong>
-                        <span>Stop immediately and preserve whatever tracks completed on disk.</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Successful Download Support Modal Popup -->
-    <div id="supportPopup" class="modal-overlay">
-        <div class="modal-card support-popup-card">
-            <div class="modal-header">
-                <h3>Download Successful! 🎉</h3>
-                <button class="close-modal" id="btnCloseSupportPopup">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Your file has finished downloading. Spotune is completely free to use. If you enjoy the app, please consider supporting the creator to help cover the server hosting and bandwidth costs!</p>
-                <div style="display: flex; gap: 0.8rem; margin-top: 1.5rem;">
-                    <a href="https://ko-fi.com/flashbutlegendary" target="_blank" class="btn btn-primary" style="flex: 2;">
-                        <span>☕ Support the Creator</span>
-                    </a>
-                    <button id="btnDismissPopup" class="btn btn-secondary" style="flex: 1;">
-                        <span id="dismissText">Dismiss</span>
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Scripts -->
