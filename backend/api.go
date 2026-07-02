@@ -15,7 +15,10 @@ import (
 	"time"
 )
 
-var AppVersion = "7.1.9"
+// AppVersion is declared in musicbrainz.go
+
+// apiCache is an alias for metadataCache, used by cleanup.go
+var apiCache = &metadataCache
 
 // JobState tracks download jobs for polling and streaming.
 type JobState struct {
@@ -34,12 +37,12 @@ type JobState struct {
 }
 
 var (
-	jobsMap         sync.Map // map[string]*JobState
-	metadataCache   sync.Map // cache for Spotify metadata
-	cacheDuration   = 5 * time.Minute
-	metadataLimiter = NewRateLimiter(10, 0.5) // Max 10 requests, refills 1 token every 2 seconds
-	downloadLimiter = NewRateLimiter(5, 0.2)  // Max 5 requests, refills 1 token every 5 seconds
-	activeWorkspaces = sync.Map{} // map[string]string (taskId -> tempDir)
+	jobsMap          sync.Map // map[string]*JobState
+	metadataCache    sync.Map // cache for Spotify metadata
+	cacheDuration    = 5 * time.Minute
+	metadataLimiter  = NewRateLimiter(10, 0.5) // Max 10 requests, refills 1 token every 2 seconds
+	downloadLimiter  = NewRateLimiter(5, 0.2)  // Max 5 requests, refills 1 token every 5 seconds
+	activeWorkspaces sync.Map                  // map[string]string (taskId -> tempDir)
 )
 
 type RateLimiter struct {
@@ -554,12 +557,35 @@ func handlePlaylistRoute(w http.ResponseWriter, r *http.Request) {
 
 // Internal Workers & Utilities
 
+// extractSpotifyID pulls a track/playlist ID from a Spotify URL or returns the raw value.
+func extractSpotifyID(rawURL string) string {
+	re := regexp.MustCompile(`(?:track|playlist|album)/([A-Za-z0-9]+)`)
+	if m := re.FindStringSubmatch(rawURL); len(m) > 1 {
+		return m[1]
+	}
+	// If no URL pattern, treat as bare ID
+	if regexp.MustCompile(`^[A-Za-z0-9]{22}$`).MatchString(rawURL) {
+		return rawURL
+	}
+	return ""
+}
+
+// getJobPercent returns the current download percentage for a job from the queue.
+func getJobPercent(jobID string) float64 {
+	queue := GetDownloadQueue()
+	for _, item := range queue.Items {
+		if item.ID == jobID && item.TotalSize > 0 {
+			return float64(item.Progress) / float64(item.TotalSize) * 100
+		}
+	}
+	return 0
+}
+
 func executeTrackDownloadTask(taskID, spotifyID, format, quality, outputDir string) error {
 	jobVal, _ := jobsMap.Load(taskID)
 	job := jobVal.(*JobState)
 	job.Status = "downloading"
 
-	startTime := time.Now()
 	metric := DownloadLogEntry{
 		TaskID:  taskID,
 		Format:  format,
@@ -625,9 +651,6 @@ func executeTrackDownloadTask(taskID, spotifyID, format, quality, outputDir stri
 
 	downloadFormat := "LOSSLESS"
 	downloader := NewTidalDownloader(GetCustomTidalAPISetting())
-	if service == "qobuz" {
-		downloader.SetCustomAPIURL(GetQobuzCommunityHealthURL())
-	}
 
 	AddToQueue(taskID, trackName, artistName, albumName, spotifyID)
 	StartDownloadItem(taskID)

@@ -57,8 +57,8 @@ func runCleanupTask() {
 	// 2. Clean cache entries in sync.Map
 	now := time.Now()
 	apiCache.Range(func(key, value interface{}) bool {
-		cached := value.(CacheItem)
-		if now.After(cached.Expiration) {
+		cached, ok := value.(CacheItem)
+		if ok && now.After(cached.Expiration) {
 			apiCache.Delete(key)
 		}
 		return true

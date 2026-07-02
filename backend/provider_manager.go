@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 	"time"
 )
@@ -33,12 +32,28 @@ type Registry struct {
 }
 
 var (
-	cachedRegistry       *Registry
-	registryMutex        sync.RWMutex
-	providersDir         string
-	providerSetupDone    bool
-	providerSetupDoneMu  sync.RWMutex
+	cachedRegistry      *Registry
+	registryMutex       sync.RWMutex
+	providersDir        string
+	providerSetupDone   bool
+	providerSetupDoneMu sync.RWMutex
 )
+
+// GetRegistryInfo returns the currently cached registry, loading the fallback if needed.
+func GetRegistryInfo() (*Registry, error) {
+	registryMutex.RLock()
+	reg := cachedRegistry
+	registryMutex.RUnlock()
+	if reg != nil {
+		return reg, nil
+	}
+	// Return fallback registry
+	var fallback Registry
+	if err := json.Unmarshal([]byte(fallbackRegistryJSON), &fallback); err != nil {
+		return nil, err
+	}
+	return &fallback, nil
+}
 
 // In-memory success tracking for dynamic scoring
 var providerStats = struct {

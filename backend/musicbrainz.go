@@ -13,7 +13,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-var AppVersion = "Unknown"
 
 const (
 	musicBrainzAPIBase               = "https://musicbrainz.org/ws/2"
