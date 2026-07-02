@@ -14,8 +14,9 @@ const getApiBase = () => {
         }
         const stored = localStorage.getItem('SPOTUNE_API_BASE');
         if (stored) return stored;
+        return 'https://spotune.onrender.com/api/v1';
     }
-    return window.location.origin.endsWith(':16860') ? window.location.origin + '/api/v1' : 'https://spotune.onrender.com/api/v1';
+    return window.location.origin + '/api/v1';
 };
 
 let activeCancelJobId = null;

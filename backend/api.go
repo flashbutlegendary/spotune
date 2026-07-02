@@ -130,6 +130,10 @@ func StartRESTServer() {
 	mux.HandleFunc("/api/docs", handleSwaggerUI)
 	mux.HandleFunc("/swagger.json", handleSwaggerJSON)
 
+	// Serve static files from frontend directory
+	fs := http.FileServer(http.Dir("./frontend"))
+	mux.Handle("/", fs)
+
 	handler := recoveryMiddleware(corsMiddleware(mux))
 
 	go func() {
