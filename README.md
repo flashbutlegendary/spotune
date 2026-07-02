@@ -1,15 +1,5 @@
 # Spotune
 
-Get Spotify tracks in true lossless FLAC from Tidal, Qobuz & Amazon Music — no account required.
-
-![Windows](https://img.shields.io/badge/Windows-10%2B-0078D6?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMjAgMjAiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTIwIDEwLjg3M1YyMEw4LjQ3OSAxOC41MzdsLjAwMS03LjY2NEgyMFptLTEzLjEyIDAtLjAwMSA3LjQ2MUwwIDE3LjQ2MXYtNi41ODhoNi44OFpNMjAgOS4yNzNIOC40OGwtLjAwMS03LjgxTDIwIDB2OS4yNzNaNi44NzkgMS42NjZsLjAwMSA3LjYwN0gwVjIuNTM5bDYuODc5LS44NzNaIi8+PC9zdmc+)
-![macOS](https://img.shields.io/badge/macOS-10.13%2B-000000?style=for-the-badge&logo=apple&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-Any-FCC624?style=for-the-badge&logo=linux&logoColor=white)
-![Go](https://img.shields.io/badge/Go-1.21%2B-00ADD8?style=for-the-badge&logo=go&logoColor=white)
-![Wails](https://img.shields.io/badge/Wails-v2-red?style=for-the-badge)
-
-### [Download Latest Release](https://github.com/flashbutlegendary/spotune/releases)
-
 ---
 
 ## ✨ Features
@@ -117,10 +107,6 @@ You are solely responsible for:
 The software is provided "as is", without warranty of any kind. The author assumes no liability for any bans, damages, or legal issues arising from its use.
 
 ---
-
-## 🙏 API Credits
-
-[MusicBrainz](https://musicbrainz.org) · [LRCLIB](https://lrclib.net) · [Songlink/Odesli](https://song.link) · [Songstats](https://songstats.com)
 
 ---
 
