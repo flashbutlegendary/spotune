@@ -573,7 +573,7 @@ func extractSpotifyID(rawURL string) string {
 // getJobPercent returns the current download percentage for a job from the queue.
 func getJobPercent(jobID string) float64 {
 	queue := GetDownloadQueue()
-	for _, item := range queue.Items {
+	for _, item := range queue.Queue {
 		if item.ID == jobID && item.TotalSize > 0 {
 			return float64(item.Progress) / float64(item.TotalSize) * 100
 		}
@@ -1096,9 +1096,6 @@ func ValidateFormatAndQuality(format string, quality string) error {
 	return nil
 }
 
-func GetSeparator() string {
-	return ", "
-}
 
 type DownloadLogEntry struct {
 	Timestamp          string `json:"timestamp"`

@@ -14,6 +14,8 @@ import (
 )
 
 
+var AppVersion = "7.1.9"
+
 const (
 	musicBrainzAPIBase               = "https://musicbrainz.org/ws/2"
 	musicBrainzRequestTimeout        = 10 * time.Second
