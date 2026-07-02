@@ -12,5 +12,6 @@ FROM alpine:latest
 RUN apk add --no-cache ffmpeg ca-certificates
 WORKDIR /app
 COPY --from=builder /app/spotune .
+COPY --from=builder /app/frontend ./frontend
 EXPOSE 16860
 CMD ["./spotune"]
