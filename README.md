@@ -1,49 +1,67 @@
-# SpotiFLAC
+# Spotune
 
-<a href="https://trendshift.io/repositories/15737" target="_blank"><img src="https://trendshift.io/api/badge/repositories/15737" alt="afkarxyz%2FSpotiFLAC | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+Get Spotify tracks in true lossless FLAC from Tidal, Qobuz & Amazon Music — no account required.
 
-Get Spotify tracks in true FLAC from Tidal, Qobuz & Amazon Music — no account required.
-
-![Windows](https://img.shields.io/badge/Windows-10%2B-0078D6?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMjAgMjAiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTIwIDEwLjg3M1YyMEw4LjQ3OSAxOC41MzdsLjAwMS03LjY2NEgyMFptLTEzLjEyIDBsLS4wMDEgNy40NjFMMCAxNy40NjF2LTYuNTg4aDYuODhaTTIwIDkuMjczSDguNDhsLS4wMDEtNy44MUwyMCAwdjkuMjczWk02Ljg3OSAxLjY2NmwuMDAxIDcuNjA3SDBWMi41MzlsNi44NzktLjg3M1oiLz48L3N2Zz4=)
+![Windows](https://img.shields.io/badge/Windows-10%2B-0078D6?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMjAgMjAiPjxwYXRoIGZpbGw9IiNmZmZmZmYiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTIwIDEwLjg3M1YyMEw4LjQ3OSAxOC41MzdsLjAwMS03LjY2NEgyMFptLTEzLjEyIDAtLjAwMSA3LjQ2MUwwIDE3LjQ2MXYtNi41ODhoNi44OFpNMjAgOS4yNzNIOC40OGwtLjAwMS03LjgxTDIwIDB2OS4yNzNaNi44NzkgMS42NjZsLjAwMSA3LjYwN0gwVjIuNTM5bDYuODc5LS44NzNaIi8+PC9zdmc+)
 ![macOS](https://img.shields.io/badge/macOS-10.13%2B-000000?style=for-the-badge&logo=apple&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-Any-FCC624?style=for-the-badge&logo=linux&logoColor=white)
-[![Announcements](https://img.shields.io/badge/ANNOUNCEMENTS-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spotiflac)
-[![Chat](https://img.shields.io/badge/CHAT-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/spotiflac_chat)
+![Go](https://img.shields.io/badge/Go-1.21%2B-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Wails](https://img.shields.io/badge/Wails-v2-red?style=for-the-badge)
 
-### [Download](https://github.com/spotbye/SpotiFLAC/releases)
+### [Download Latest Release](https://github.com/flashbutlegendary/spotune/releases)
 
-![Image](https://github.com/user-attachments/assets/c2624ca5-8569-49f0-950e-4410b523cea1)
+---
 
-## Other projects
+## ✨ Features
 
-### [SpotiFLAC Next](https://github.com/spotbye/SpotiFLAC-Next)
+- 🎵 **True Lossless FLAC** — fetch hi-fi audio from Tidal, Qobuz & Amazon Music
+- 🔍 **Spotify-powered metadata** — search by Spotify track, album, or playlist URL
+- 🏷️ **Rich tagging** — embeds full metadata: title, artist, album art, lyrics, ISRC & more
+- 📃 **Lyrics support** — synced & unsynced lyrics via LRCLIB
+- 🗂️ **Batch downloads** — download entire albums and playlists in one go
+- 🚫 **No account needed** — no Spotify, Tidal, or Qobuz login required
+- 🖥️ **Cross-platform** — native desktop app powered by Wails v2 + Go
 
-Get Spotify tracks in true Lossless from Tidal, Qobuz, Amazon Music, Deezer & Apple Music — no account required.
+---
 
-### [SpotubeDL.com](https://spotubedl.com)
+## 🚀 Getting Started
 
-Download Spotify Tracks, Albums, Playlists & Discography as MP3/OGG/Opus.
+1. Download the latest release for your platform from the [Releases page](https://github.com/flashbutlegendary/spotune/releases)
+2. Run the app — no installation required
+3. Paste any Spotify track, album, or playlist URL
+4. Choose your preferred source (Tidal, Qobuz, or Amazon Music)
+5. Hit download — your lossless files will be ready in seconds
 
-## Related projects
+---
 
-> [!NOTE]
->
-> Related projects are maintained by the community and are not affiliated with the core SpotiFLAC desktop build.
+## 🔧 Building from Source
 
-### [SpotiFLAC (Mobile)](https://github.com/zarzet/SpotiFLAC-Mobile)
+**Prerequisites:**
+- [Go 1.21+](https://go.dev)
+- [Node.js 18+](https://nodejs.org) & [pnpm](https://pnpm.io)
+- [Wails v2 CLI](https://wails.io) — `go install github.com/wailsapp/wails/v2/cmd/wails@latest`
+- [ffmpeg](https://ffmpeg.org) (in PATH)
 
-SpotiFLAC for Android & iOS — maintained by [@zarzet](https://github.com/zarzet)
+```bash
+git clone https://github.com/flashbutlegendary/spotune.git
+cd spotune
+wails build
+```
 
-### [SpotiFLAC (Python Module)](https://github.com/ShuShuzinhuu/SpotiFLAC-Module-Version)
+For development with hot reload:
 
-SpotiFLAC Python library for SpotiFLAC integration — maintained by [@ShuShuzinhuu](https://github.com/ShuShuzinhuu)
+```bash
+wails dev
+```
 
-## FAQ
+---
+
+## ❓ FAQ
 
 <details>
 <summary>Is this software free?</summary>
 
-_Yes. This software is completely free.
+_Yes. Spotune is completely free.
 You do not need an account, login, or subscription.
 All you need is an internet connection._
 
@@ -53,15 +71,15 @@ All you need is an internet connection._
 <summary>Can using this software get my Spotify account suspended or banned?</summary>
 
 _No.
-This software has no connection to your Spotify account.
-Spotify data is obtained through reverse engineering of the Spotify Web Player, not through user authentication._
+Spotune has no connection to your Spotify account.
+Spotify metadata is obtained through reverse engineering of the Spotify Web Player — not through user authentication._
 
 </details>
 
 <details>
 <summary>Where does the audio come from?</summary>
 
-_The audio is fetched using third-party APIs._
+_Audio is fetched using third-party APIs from Tidal, Qobuz, and Amazon Music._
 
 </details>
 
@@ -77,28 +95,18 @@ You can wait and try again later, or use a VPN to bypass the rate limit._
 <summary>Why does Windows Defender or antivirus flag or delete the file?</summary>
 
 _This is a false positive.
-It likely happens because the executable is compressed using UPX._
-
-_If you are concerned, you can fork the repository and build the software yourself from source._
-
-</details>
-
-<details>
-<summary>Want to support the project?</summary>
-
-_If this software is useful and brings you value,
-consider supporting the project by buying me a coffee.
-Your support helps keep development going._
+It may occur because the executable is packaged as a portable binary.
+If you are concerned, you can fork the repository and build the software yourself from source._
 
 </details>
 
-[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/afkarxyz)
+---
 
-## Disclaimer
+## ⚠️ Disclaimer
 
 This project is for **educational and private use only**. The developer does not condone or encourage copyright infringement.
 
-**SpotiFLAC** is a third-party tool and is not affiliated with, endorsed by, or connected to Spotify, Tidal, Qobuz, Amazon Music or any other streaming service.
+**Spotune** is a third-party tool and is not affiliated with, endorsed by, or connected to Spotify, Tidal, Qobuz, Amazon Music, or any other streaming service.
 
 You are solely responsible for:
 
@@ -108,12 +116,14 @@ You are solely responsible for:
 
 The software is provided "as is", without warranty of any kind. The author assumes no liability for any bans, damages, or legal issues arising from its use.
 
-## API Credits
+---
 
-[MusicBrainz](https://musicbrainz.org) · [LRCLIB](https://lrclib.net) · [Songlink/Odesli](https://song.link) · [Songstats](https://songstats.com) · [hifi-api](https://github.com/binimum/hifi-api) · [Qobuz-DL](https://github.com/QobuzDL/Qobuz-DL)
+## 🙏 API Credits
+
+[MusicBrainz](https://musicbrainz.org) · [LRCLIB](https://lrclib.net) · [Songlink/Odesli](https://song.link) · [Songstats](https://songstats.com)
+
+---
 
 > [!TIP]
 >
-> **Star Us**, You will receive all release notifications from GitHub without any delay ~
-
-[![RepoStars](https://repostars.dev/api/embed?repo=afkarxyz%2FSpotiFLAC&theme=forest)](https://repostars.dev/?repos=afkarxyz%2FSpotiFLAC&theme=forest)
+> **Star the repo** to get notified of all new releases instantly ⭐
