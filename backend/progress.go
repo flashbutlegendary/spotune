@@ -367,7 +367,6 @@ func CompleteDownloadItem(id, filePath string, finalSize float64) {
 	}
 	SaveQueueForRecovery()
 }
-}
 
 func FailDownloadItem(id, errorMsg string) {
 	downloadQueueLock.Lock()
@@ -383,7 +382,6 @@ func FailDownloadItem(id, errorMsg string) {
 	}
 	SaveQueueForRecovery()
 }
-}
 
 func SkipDownloadItem(id, filePath string) {
 	downloadQueueLock.Lock()
@@ -398,7 +396,6 @@ func SkipDownloadItem(id, filePath string) {
 		}
 	}
 	SaveQueueForRecovery()
-}
 }
 
 func GetDownloadQueue() DownloadQueueInfo {
