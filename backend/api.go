@@ -283,8 +283,8 @@ func handleMetadata(w http.ResponseWriter, r *http.Request) {
 		result = map[string]interface{}{
 			"type": "playlist",
 			"data": map[string]interface{}{
-				"name":         playlistDetails.PlaylistInfo.Owner.DisplayName,
-				"owner":        playlistDetails.PlaylistInfo.Owner.Name,
+				"name":         playlistDetails.PlaylistInfo.Owner.Name,
+				"owner":        playlistDetails.PlaylistInfo.Owner.DisplayName,
 				"cover_url":    playlistDetails.PlaylistInfo.Cover,
 				"total_tracks": playlistDetails.PlaylistInfo.Tracks.Total,
 			},

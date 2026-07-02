@@ -501,15 +501,31 @@ document.getElementById('btnCloseModal').addEventListener('click', () => {
 async function handleCancelChoice(option) {
     if (!activeCancelJobId) return;
     document.getElementById('cancelModal').classList.remove('active');
+    
+    if (option === 'continue') {
+        // Simply resume polling and do not cancel
+        startPollingProgress(activeCancelJobId);
+        activeCancelJobId = null;
+        return;
+    }
+
     const apiBase = getApiBase();
 
     if (activePollingInterval) clearInterval(activePollingInterval);
+
+    // Map frontend option to backend expected string
+    let backendOption = "keep";
+    if (option === "cancel_all") {
+        backendOption = "delete";
+    } else if (option === "cancel_zip_completed") {
+        backendOption = "zip";
+    }
 
     try {
         const resp = await fetch(`${apiBase}/playlist/${activeCancelJobId}/cancel`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ option })
+            body: JSON.stringify({ option: backendOption })
         });
         const body = await resp.json();
         
@@ -530,6 +546,7 @@ async function handleCancelChoice(option) {
         alert('Smart cancellation encountered an error.');
     }
     resetWorkflow();
+    activeCancelJobId = null;
 }
 
 // Bind cancellation modal options
